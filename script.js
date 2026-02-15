@@ -2,12 +2,12 @@
 const mesPhotos = [
     { url: "https://i.postimg.cc/qv7wrrcz/IMG_1686.jpg", titre: "couple", categorie: "couple" },
     { url: "https://i.postimg.cc/vTsKGKXG/IMG_1681.jpg", titre: "Portrait", categorie: "homme" },
-    { url: "https://i.postimg.cc/L5pWmWvH/IMG_1682.jpg", titre: "Enfant", categorie: "enfant" }
+    { url: "https://i.postimg.cc/L5pWmWvH/IMG_1682.jpg", titre: "Traditionnelle", categorie: "traditionnelle" }
 ];
 
 const anciensClients = [
-    { nom: "Famille Martin", adresse: "Rue de la Libération, 75010 Paris" },
-    { nom: "Entreprise Tech", adresse: "Quai des Orfèvres, 69002 Lyon" }
+    { nom: "Abidjan(Yopougon)", adresse: "Palais de justice; BEAGO" },
+    { nom: "+225 0705292570", adresse: "" }
 ];
 
 // --- INITIALISATION ---
