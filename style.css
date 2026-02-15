@@ -240,3 +240,128 @@ footer {
     .grid-container { column-count: 2; }
     .search-box { width: 150px; }
 }
+
+
+
+
+
+
+
+
+
+/* --- SIDE MENU DESIGN --- */
+
+
+/* --- SIDE MENU DESIGN (Style iOS avec flou) --- */
+#side-menu {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Caché par défaut */
+    width: 280px;
+    height: 100vh;
+    z-index: 2000;
+    
+    /* L'effet "Bulle d'eau" identique au header */
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-val);
+    -webkit-backdrop-filter: var(--blur-val);
+    border-right: 1px solid var(--glass-border); /* Ligne de séparation à droite */
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2); /* Ombre pour donner de la profondeur */
+    
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+#side-menu.open {
+    left: 0; /* Affiche le menu */
+}
+
+/* On stylise aussi les liens à l'intérieur pour qu'ils soient plus visibles */
+.menu-content a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 12px;
+    transition: background 0.3s;
+}
+
+.menu-content a:hover {
+    background: rgba(120, 120, 128, 0.1); /* Petit effet au survol */
+}
+
+
+
+
+
+
+
+
+
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+#close-menu {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+
+
+.menu-sep {
+    border: 0;
+    border-top: 1px solid var(--glass-border);
+}
+
+.menu-item-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+#menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px); /* Floute le fond quand le menu est ouvert */
+    z-index: 1999;
+    display: none; /* Caché par défaut */
+}
+
+#menu-overlay.active {
+    display: block;
+}
