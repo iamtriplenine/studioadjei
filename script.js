@@ -2,6 +2,7 @@
 const mesPhotos = [
     { url: "https://i.postimg.cc/j2b1R1vT/IMG_1680.jpg", titre: "Mariage", categorie: "mariage" },
     { url: "https://i.postimg.cc/vTsKGKXG/IMG_1681.jpg", titre: "Portrait", categorie: "homme" },
+    { url: "https://i.postimg.cc/L5pWmWvH/IMG_1682.jpg", titre: "Enfant", categorie: "enfant" },
     { url: "https://i.postimg.cc/L5pWmWvH/IMG_1682.jpg", titre: "Enfant", categorie: "enfant" }
 ];
 
