@@ -10,18 +10,30 @@ const anciensClients = [
     { nom: "+225 0705292570", adresse: "" }
 ];
 
-// --- INITIALISATION ---
-// --- INITIALISATION ---
-// Remplacez votre bloc d'initialisation
+// --- INITIALISATION UNIQUE ---
 document.addEventListener('DOMContentLoaded', () => {
     chargerGalerie();
     chargerClients();
     initDarkMode();
     initFilters();
-    initSideMenu(); // Nouvelle fonction à appeler
+    initSideMenu();
+    initBanner();
 });
 
-// Nouvelle fonction pour le menu
+// Gestion du Mode Sombre (Bouton dans le menu overlay)
+function initDarkMode() {
+    const btnMenu = document.getElementById('theme-toggle-menu'); // Le bouton dans l'overlay
+    
+    if (btnMenu) {
+        btnMenu.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            // Change l'icône selon le mode
+            btnMenu.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+    }
+}
+
+// Menu Latéral
 function initSideMenu() {
     const sideMenu = document.getElementById('side-menu');
     const overlay = document.getElementById('menu-overlay');
@@ -43,31 +55,14 @@ function initSideMenu() {
     overlay.addEventListener('click', () => toggleMenu(false));
 }
 
-// Mise à jour de la fonction Dark Mode (bouton déplacé)
-function initDarkMode() {
-    const btn = document.getElementById('theme-toggle-menu');
-    btn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        btn.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
-}
-
-
-
-
-
-
-// Charger les images dans la grille
-// Charger les albums dans la grille
+// Affichage initial des albums
 function chargerGalerie() {
     const container = document.getElementById('galerie');
-    container.innerHTML = ""; 
-
-    mesPhotos.forEach(p => {
-        // On crée le nom du fichier HTML (ex: mariage.html)
+    if (!container) return;
+    
+    container.innerHTML = mesPhotos.map(p => {
         const albumLink = p.titre.toLowerCase().replace(/ /g, "_") + ".html";
-
-        container.innerHTML += `
+        return `
             <div class="photo-item">
                 <a href="${albumLink}">
                     <img src="${p.url}" alt="${p.titre}">
@@ -75,60 +70,31 @@ function chargerGalerie() {
                         <span>${p.titre}</span>
                     </div>
                 </a>
-            </div>
-        `;
-    });
+            </div>`;
+    }).join('');
 }
 
-
-
-
-
-
-// Charger les clients avec ADRESSE (obligatoire)
-function chargerClients() {
-    const ul = document.getElementById('clients-ul');
-    ul.innerHTML = anciensClients.map(c => `
-        <li><strong>${c.nom}</strong> — ${c.adresse}</li>
-    `).join('');
-}
-
-// Gestion du Mode Sombre (Toggle)
-
-
-
-
-
-
+// Filtrage (Correction : Garde la structure d'album)
 function initFilters() {
     const buttons = document.querySelectorAll('.filter-btn');
-    
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // 1. Gérer le style visuel des boutons
             document.querySelector('.filter-btn.active').classList.remove('active');
             btn.classList.add('active');
-
-            // 2. Filtrer les photos
-            const category = btn.getAttribute('data-category');
-            filtrerGalerie(category);
+            filtrerGalerie(btn.getAttribute('data-category'));
         });
     });
 }
 
 function filtrerGalerie(category) {
     const container = document.getElementById('galerie');
-    
-    // Si "all", on prend tout, sinon on filtre
     const photosFiltrees = category === 'all' 
         ? mesPhotos 
         : mesPhotos.filter(p => p.categorie === category);
 
-    // Ré-afficher la galerie avec animation
     container.style.opacity = '0';
     setTimeout(() => {
         container.innerHTML = photosFiltrees.map(p => {
-            // On recrée la structure d'album complète
             const albumLink = p.titre.toLowerCase().replace(/ /g, "_") + ".html";
             return `
                 <div class="photo-item">
@@ -138,46 +104,27 @@ function filtrerGalerie(category) {
                             <span>${p.titre}</span>
                         </div>
                     </a>
-                </div>
-            `;
+                </div>`;
         }).join('');
         container.style.opacity = '1';
     }, 200);
 }
 
-// N'oublie pas d'ajouter initFilters() dans ton document.addEventListener('DOMContentLoaded', ...)
-
-
-// Ajoutez "initBanner()" dans votre écouteur DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    chargerGalerie();
-    chargerClients();
-    initDarkMode();
-    initFilters();
-    initSideMenu();
-    initBanner(); // <--- Nouvelle fonction
-});
+function chargerClients() {
+    const ul = document.getElementById('clients-ul');
+    if (ul) {
+        ul.innerHTML = anciensClients.map(c => `
+            <li><strong>${c.nom}</strong> — ${c.adresse}</li>
+        `).join('');
+    }
+}
 
 function initBanner() {
     const banner = document.getElementById('banner-bottom');
     const closeBtn = document.getElementById('close-banner');
-
     if (banner) {
-        // 1. Apparition après 1 seconde
-        setTimeout(() => {
-            banner.classList.add('show');
-            
-            // 2. DISPARITION AUTOMATIQUE après 5 secondes (5000ms)
-            // On l'exécute seulement après que la bannière soit apparue
-            setTimeout(() => {
-                banner.classList.remove('show');
-            }, 5000); 
-
-        }, 1000);
-
-        // 3. Fermeture manuelle (si l'utilisateur clique avant les 5s)
-        closeBtn.addEventListener('click', () => {
-            banner.classList.remove('show');
-        });
+        setTimeout(() => { banner.classList.add('show'); }, 1000);
+        setTimeout(() => { banner.classList.remove('show'); }, 6000);
+        closeBtn.addEventListener('click', () => { banner.classList.remove('show'); });
     }
 }
