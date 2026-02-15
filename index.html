@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Photographe Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode">
+
+    <header class="site-header">
+        <div class="header-container">
+            <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-main); opacity: 0.6;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input type="text" id="photo-search" placeholder="Rechercher...">
+</div>
+
+            <div class="logo">
+                <a href="#">STUDIO<span>ADJEI</span></a>
+            </div>
+
+            <button id="theme-toggle" class="glass-button">☀️</button>
+        </div>
+    </header>
+
+
+
+
+<br>
+    <br>
+
+
+
+    <div class="filter-bar">
+    <button class="filter-btn active" data-category="all">All</button>
+    <button class="filter-btn" data-category="homme">Homme</button>
+    <button class="filter-btn" data-category="femme">Femme</button>
+    <button class="filter-btn" data-category="enfant">Enfant</button>
+    <button class="filter-btn" data-category="mariage">Mariage</button>
+    <button class="filter-btn" data-category="saint-valentin">Saint-Valentin</button>
+</div>
+
+
+
+
+
+
+
+   
+
+    <main>
+        <section class="hero">
+    <div class="hero-content glass">
+        <h1>Capturer l'Émotion</h1>
+        <p>Photographie professionnelle & artistique</p>
+    </div>
+</section>
+
+        <section id="galerie" class="grid-container"></section>
+
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+    <footer id="contact">
+        <div class="glass footer-card">
+            <p>© 2026 Photographie Pro</p>
+            <div id="client-list">
+                <h3>Nos Clients & Archives</h3>
+                <ul id="clients-ul"></ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
