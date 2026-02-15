@@ -13,12 +13,45 @@ const anciensClients = [
 
 // --- INITIALISATION ---
 // --- INITIALISATION ---
+// Remplacez votre bloc d'initialisation
 document.addEventListener('DOMContentLoaded', () => {
     chargerGalerie();
     chargerClients();
     initDarkMode();
-    initFilters(); // AJOUT : Cette ligne active les boutons de filtrage
+    initFilters();
+    initSideMenu(); // Nouvelle fonction à appeler
 });
+
+// Nouvelle fonction pour le menu
+function initSideMenu() {
+    const sideMenu = document.getElementById('side-menu');
+    const overlay = document.getElementById('menu-overlay');
+    const openBtn = document.getElementById('open-menu');
+    const closeBtn = document.getElementById('close-menu');
+
+    const toggleMenu = (isOpen) => {
+        if (isOpen) {
+            sideMenu.classList.add('open');
+            overlay.classList.add('active');
+        } else {
+            sideMenu.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+    };
+
+    openBtn.addEventListener('click', () => toggleMenu(true));
+    closeBtn.addEventListener('click', () => toggleMenu(false));
+    overlay.addEventListener('click', () => toggleMenu(false));
+}
+
+// Mise à jour de la fonction Dark Mode (bouton déplacé)
+function initDarkMode() {
+    const btn = document.getElementById('theme-toggle-menu');
+    btn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        btn.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+}
 
 
 
@@ -44,14 +77,7 @@ function chargerClients() {
 }
 
 // Gestion du Mode Sombre (Toggle)
-function initDarkMode() {
-    const btn = document.getElementById('theme-toggle');
-    btn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        // Change l'icône selon le mode
-        btn.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
-}
+
 
 
 
