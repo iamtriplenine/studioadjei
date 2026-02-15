@@ -495,3 +495,27 @@ footer {
     justify-content: center;
     flex-shrink: 0; /* Empêche la croix de s'écraser */
 }
+
+
+
+
+
+
+/* --- ADAPTATION MOBILE (2 colonnes) --- */
+@media (max-width: 600px) {
+    .grid-container {
+        /* On force l'affichage en 2 colonnes */
+        grid-template-columns: repeat(2, 1fr) !important; 
+        gap: 10px; /* Espace réduit pour gagner de la place */
+        padding: 10px;
+    }
+
+    .photo-item {
+        height: 250px; /* On réduit la hauteur sur mobile pour que ça soit harmonieux */
+        border-radius: 15px;
+    }
+
+    .album-overlay span {
+        font-size: 0.9rem; /* Texte un peu plus petit pour tenir sur deux colonnes */
+    }
+}
