@@ -1,0 +1,242 @@
+/* --- VARIABLES ET THÈMES --- */
+:root {
+    --bg-main: #f2f2f7; /* Gris clair iOS */
+    --text-main: #1c1c1efb;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --blur-val: blur(20px);
+    --accent: #007aff; /* Bleu iOS */
+}
+
+/* Mode Sombre - Activé via la classe .dark-mode sur le body */
+body.dark-mode {
+    --bg-main: #000000;
+    --text-main: #ffffff;
+    --glass-bg: rgba(38, 38, 40, 0.303);
+    --glass-border: rgba(100, 99, 99, 0.153);
+}
+
+/* --- RESET & BASE --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1.6;
+}
+
+/* --- HEADER "GLASS" iOS STYLE --- */
+.site-header {
+    position: sticky;
+    top: 20px;
+    z-index: 1000;
+    margin: 0 20px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-val);
+    -webkit-backdrop-filter: var(--blur-val);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 10px 25px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Recherche (Bulle floue) */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espace entre la loupe et le texte */
+    background: rgba(120, 120, 128, 0.12); /* Teinte iOS 18 */
+    padding: 8px 15px;
+    border-radius: 18px;
+    width: 280px;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    background: rgba(120, 120, 128, 0.2);
+    box-shadow: 0 0 0 1px var(--glass-border);
+}
+
+.search-box input {
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+/* Logo à droite */
+.logo a {
+    text-decoration: none;
+    color: var(--text-main);
+    letter-spacing: 3px;
+    font-weight: 300;
+}
+
+.logo span { font-weight: 800; }
+
+/* Bouton Dark Mode */
+#theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* --- GALERIE --- */
+.grid-container {
+    padding: 40px 20px;
+    column-count: 3;
+    column-gap: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.photo-item {
+    margin-bottom: 20px;
+    break-inside: avoid;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    transition: transform 0.3s ease;
+}
+
+.photo-item:hover {
+    transform: scale(1.02);
+}
+
+.photo-item img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* --- FOOTER & CLIENTS --- */
+footer {
+    margin: 40px 20px;
+    padding: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-val);
+    border-radius: 30px;
+    text-align: center;
+}
+
+#clients-ul {
+    list-style: none;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#clients-ul li {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Barre de filtres style iOS */
+.filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0 40px 0;
+    flex-wrap: wrap; /* Pour que ça passe à la ligne sur mobile */
+}
+
+.filter-btn {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-val);
+    -webkit-backdrop-filter: var(--blur-val);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Style du bouton actif ou survolé */
+.filter-btn:hover, .filter-btn.active {
+    background: var(--accent); /* Le bleu iOS */
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+}
+
+
+
+
+
+/* --- DESIGN HERO SECTION (iOS Style) --- */
+.hero {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center;     /* Centre verticalement */
+    padding: 60px 20px;
+    text-align: center;      /* Centre le texte à l'intérieur */
+}
+
+.hero-content {
+    padding: 40px 60px;
+    max-width: 800px;
+    border-radius: 35px;     /* Bords très arrondis style iOS */
+    display: inline-block;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;    /* Typographie serrée style Apple */
+    margin-bottom: 10px;
+    color: var(--text-main);
+}
+
+.hero p {
+    font-size: 1.1rem;
+    opacity: 0.7;
+    font-weight: 300;
+    color: var(--text-main);
+}
+
+/* Ajustement pour mobile */
+@media (max-width: 600px) {
+    .hero h1 { font-size: 1.8rem; }
+    .hero-content { padding: 30px 20px; }
+}
+
+
+
+
+
+
+
+/* Responsive */
+@media (max-width: 800px) {
+    .grid-container { column-count: 2; }
+    .search-box { width: 150px; }
+}
