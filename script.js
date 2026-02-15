@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initFilters();
     initSideMenu();
     initBanner();
+    initParallax(); // <--- Activé
+    initSearch();   // <--- Activé
 });
 
 // Gestion du Mode Sombre (Bouton dans le menu overlay)
@@ -126,5 +128,40 @@ function initBanner() {
         setTimeout(() => { banner.classList.add('show'); }, 1000);
         setTimeout(() => { banner.classList.remove('show'); }, 6000);
         closeBtn.addEventListener('click', () => { banner.classList.remove('show'); });
+    }
+}
+
+
+function initSearch() {
+    const searchInput = document.getElementById('photo-search');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const container = document.getElementById('galerie');
+            
+            // On filtre les photos basées sur le titre
+            const resultats = mesPhotos.filter(p => 
+                p.titre.toLowerCase().includes(term) || 
+                p.categorie.toLowerCase().includes(term)
+            );
+
+            // Mise à jour de l'affichage avec animation fluide
+            container.innerHTML = resultats.map(p => {
+                const albumLink = p.titre.toLowerCase().replace(/ /g, "_") + ".html";
+                return `
+                    <div class="photo-item">
+                        <a href="${albumLink}">
+                            <img src="${p.url}" alt="${p.titre}">
+                            <div class="album-overlay">
+                                <span>${p.titre}</span>
+                            </div>
+                        </a>
+                    </div>`;
+            }).join('');
+            
+            // On relance le parallaxe pour les nouveaux éléments
+            initParallax(); 
+        });
     }
 }
