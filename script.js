@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBanner();
     initParallax(); // <--- Activé
     initSearch();   // <--- Activé
+    initDraggableContact()
 });
 
 // Gestion du Mode Sombre (Bouton dans le menu overlay)
@@ -165,3 +166,65 @@ function initSearch() {
         });
     }
 }
+
+
+function initDraggableContact() {
+    const el = document.querySelector('.floating-contact');
+    if (!el) return;
+
+    let isDragging = false;
+    let offset = { x: 0, y: 0 };
+
+    const onStart = (e) => {
+        isDragging = true;
+        el.style.transition = "none"; // Désactive la transition pour un mouvement instantané
+        
+        const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        
+        const rect = el.getBoundingClientRect();
+        offset.x = clientX - rect.left;
+        offset.y = clientY - rect.top;
+    };
+
+    const onMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+        // Calcul des nouvelles positions
+        let x = clientX - offset.x;
+        let y = clientY - offset.y;
+
+        // Limites de l'écran (pour ne pas sortir du site)
+        const maxX = window.innerWidth - el.offsetWidth;
+        const maxY = window.innerHeight - el.offsetHeight;
+        
+        x = Math.min(Math.max(0, x), maxX);
+        y = Math.min(Math.max(0, y), maxY);
+
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.bottom = 'auto'; // On annule le bottom d'origine
+        el.style.right = 'auto';  // On annule le right d'origine
+    };
+
+    const onEnd = () => {
+        isDragging = false;
+        el.style.transition = "transform 0.3s"; // Réactive l'effet d'échelle
+    };
+
+    // Événements Souris
+    el.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
+
+    // Événements Tactiles (Mobile)
+    el.addEventListener('touchstart', onStart, { passive: false });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+}
+
+// AJOUTER initDraggableContact() dans ton DOMContentLoaded !
