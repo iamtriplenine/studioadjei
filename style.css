@@ -648,3 +648,152 @@ footer {
     animation: pulse-red 2s infinite;
     pointer-events: none;
 }
+
+
+
+
+
+
+
+
+/* --- SECTION BANNIÈRES PUBLICITAIRES --- */
+.ads-slider {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 20px 30px 20px;
+    scrollbar-width: none; /* Cache la barre sur Firefox */
+}
+
+.ads-slider::-webkit-scrollbar {
+    display: none; /* Cache la barre sur Chrome/Safari */
+}
+
+.ads-track {
+    display: flex;
+    gap: 15px;
+}
+
+.ad-card {
+    position: relative;
+    flex: 0 0 85%; /* Largeur de la bannière (85% de l'écran) */
+    max-width: 600px;
+    height: 150px; /* Peu de hauteur pour le look rectangulaire */
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.ad-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* L'image remplit tout le rectangle sans se déformer */
+    transition: transform 0.5s ease;
+}
+
+.ad-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Texte sur l'image */
+.ad-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    color: white;
+}
+
+.ad-overlay h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.ad-overlay p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* Ajustement mobile */
+@media (max-width: 600px) {
+    .ad-card {
+        flex: 0 0 90%;
+        height: 120px;
+    }
+}
+
+
+/* --- LUEUR VIOLETTE INFINIE ET DIFFUSE --- */
+.ads-container {
+    position: relative;
+    width: 100%;
+    padding: 40px 0;
+    overflow: visible; /* On laisse la lueur déborder légèrement */
+    background: transparent;
+}
+
+.glow-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden; /* Limite la lueur à la zone de la bannière pour ne pas polluer tout le site */
+}
+
+.purple-glow {
+    position: absolute;
+    background: radial-gradient(circle, rgba(160, 32, 240, 0.4) 0%, rgba(160, 32, 240, 0) 70%);
+    filter: blur(120px); /* Flou massif pour supprimer toute bordure ou trait */
+    border-radius: 50%;
+    opacity: 0.8;
+    will-change: transform;
+}
+
+/* Bulle 1 : Mouvement large */
+.glow-1 {
+    width: 500px;
+    height: 400px;
+    top: -50%;
+    left: -20%;
+    animation: floatingGlow1 12s infinite alternate ease-in-out;
+}
+
+/* Bulle 2 : Mouvement opposé */
+.glow-2 {
+    width: 450px;
+    height: 350px;
+    bottom: -40%;
+    right: -10%;
+    animation: floatingGlow2 15s infinite alternate ease-in-out;
+    background: radial-gradient(circle, rgba(130, 0, 255, 0.3) 0%, rgba(130, 0, 255, 0) 70%);
+}
+
+/* Animations imprévisibles (Haut, Bas, Gauche, Droite) */
+@keyframes floatingGlow1 {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50%, 20%) scale(1.2); }
+    66% { transform: translate(20%, 50%) scale(0.9); }
+    100% { transform: translate(80%, -10%) scale(1.1); }
+}
+
+@keyframes floatingGlow2 {
+    0% { transform: translate(0, 0) scale(1.1); }
+    50% { transform: translate(-40%, -30%) scale(0.8); }
+    100% { transform: translate(-10%, 20%) scale(1.2); }
+}
+
+/* On s'assure que les cartes sont bien au-dessus sans fond opaque */
+.ads-slider {
+    position: relative;
+    z-index: 2;
+}
+
+.ad-card {
+    background: rgba(255, 255, 255, 0.05); /* Très léger pour laisser passer la lueur derrière */
+    backdrop-filter: blur(5px);
+}
