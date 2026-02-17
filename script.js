@@ -58,6 +58,49 @@ function initSideMenu() {
     overlay.addEventListener('click', () => toggleMenu(false));
 }
 
+
+
+
+
+
+function initHorizontalScroll() {
+    const slider = document.querySelector('.filter-bar');
+    if (!slider) return;
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+    });
+
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+    });
+
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2; // Vitesse de défilement
+        slider.scrollLeft = scrollLeft - walk;
+    });
+}
+
+// N'oublie pas de l'ajouter dans ton DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    // ... tes autres fonctions
+    initHorizontalScroll();
+});
+
 // Affichage initial des albums
 function chargerGalerie() {
     const container = document.getElementById('galerie');
@@ -228,3 +271,37 @@ function initDraggableContact() {
 }
 
 // AJOUTER initDraggableContact() dans ton DOMContentLoaded !
+
+
+
+
+
+
+
+
+function initAdsScroll() {
+    const slider = document.querySelector('.ads-slider');
+    if (!slider) return;
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+        slider.style.cursor = 'grabbing';
+    });
+
+    slider.addEventListener('mouseleave', () => { isDown = false; slider.style.cursor = 'pointer'; });
+    slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'pointer'; });
+
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+    });
+}
