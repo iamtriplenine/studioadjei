@@ -172,7 +172,7 @@ body.dark-mode .purple-glow{ opacity: .35; }
   font-size: .95rem;
 }
 @media (max-width: 700px){
-  .search-box input{ width: 150px; }
+  .search-box input{ width: 100px; }
 }
 
 /* Logo */
