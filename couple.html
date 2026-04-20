@@ -1,59 +1,444 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Album - Mariage</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Album Couple — Studio Adjei</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"/>
     <style>
-        /* CSS INTERNE POUR CET ALBUM */
-        body {
-            background: #000;
-            color: #fff;
-            font-family: -apple-system, sans-serif;
-            margin: 0;
-            padding: 20px;
+        /* ── ALBUM-SPECIFIC STYLES ─────────────────────────────── */
+
+        .album-hero{
+            position: relative;
+            z-index: 1;
+            padding: 40px 20px 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
         }
-        .header-album {
+
+        .album-back{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid var(--stroke);
+            background: rgba(128,128,140,.12);
+            color: var(--text);
+            font-size: .88rem;
+            font-weight: 500;
+            transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+        }
+        .album-back:hover{
+            transform: translateX(-3px);
+            background: rgba(var(--accent-rgb),.12);
+            color: var(--accent);
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        .album-meta{ display: flex; flex-direction: column; gap: 4px; }
+        .album-category{
+            font-size: .75rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 500;
+        }
+        .album-title{
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(2.4rem, 7vw, 4.5rem);
+            font-weight: 300;
+            line-height: 1.05;
+            letter-spacing: -0.5px;
+        }
+        .album-title em{ font-style: italic; color: var(--accent); }
+        .album-count{
+            font-size: .82rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ── LIGHTBOX ──────────────────────────────────────────── */
+        .album-grid{
+            max-width: 1280px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            columns: 3;
+            column-gap: 14px;
+            position: relative; z-index: 1;
+        }
+        @media(max-width:900px){ .album-grid{ columns: 2; } }
+        @media(max-width:500px){ .album-grid{ columns: 2; column-gap: 8px; padding: 0 12px; } }
+
+        .album-item{
+            break-inside: avoid;
+            margin-bottom: 14px;
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: zoom-in;
+            position: relative;
+            background: rgba(128,128,140,.1);
+            box-shadow: var(--shadow);
+            transition: transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s ease;
+        }
+        @media(max-width:500px){ .album-item{ margin-bottom: 8px; border-radius: 12px; } }
+        .album-item:hover{
+            transform: translateY(-4px) scale(1.012);
+            box-shadow: 0 24px 64px rgba(0,0,0,.28);
+        }
+        .album-item img{
+            width: 100%;
+            display: block;
+            transition: transform .5s ease;
+        }
+        .album-item:hover img{ transform: scale(1.04); }
+
+        /* photo number badge */
+        .album-item::after{
+            content: attr(data-index);
+            position: absolute;
+            bottom: 10px; right: 12px;
+            font-size: .72rem;
+            color: rgba(255,255,255,.7);
+            background: rgba(0,0,0,.35);
+            padding: 3px 9px;
+            border-radius: 999px;
+            backdrop-filter: blur(10px);
+            letter-spacing: .5px;
+        }
+
+        /* ── LIGHTBOX OVERLAY ──────────────────────────────────── */
+        .lightbox{
+            position: fixed; inset: 0;
+            z-index: 9000;
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 40px;
+            justify-content: center;
+            background: rgba(0,0,0,.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            opacity: 0; pointer-events: none;
+            transition: opacity .3s ease;
         }
-        .btn-back {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 10px 20px;
+        .lightbox.open{ opacity: 1; pointer-events: auto; }
+
+        .lightbox-img{
+            max-width: min(90vw, 1000px);
+            max-height: 88vh;
             border-radius: 20px;
-            text-decoration: none;
+            box-shadow: 0 40px 120px rgba(0,0,0,.7);
+            object-fit: contain;
+            transform: scale(.94);
+            transition: transform .35s cubic-bezier(.2,.8,.2,1);
+            user-select: none;
         }
-        .album-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
+        .lightbox.open .lightbox-img{ transform: scale(1); }
+
+        .lb-btn{
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.18);
+            background: rgba(255,255,255,.1);
+            backdrop-filter: blur(14px);
+            color: #fff;
+            display: grid; place-items: center;
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease;
+            z-index: 1;
         }
-        .album-grid img {
-            width: 100%;
-            border-radius: 15px;
-            transition: 0.3s;
+        .lb-btn:hover{ background: rgba(var(--accent-rgb),.3); transform: translateY(-50%) scale(1.08); }
+        .lb-prev{ left: 20px; }
+        .lb-next{ right: 20px; }
+        .lb-close{
+            position: absolute;
+            top: 18px; right: 18px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.18);
+            background: rgba(255,255,255,.1);
+            backdrop-filter: blur(14px);
+            color: #fff;
+            display: grid; place-items: center;
+            cursor: pointer;
+            transition: background .2s ease;
         }
-        .album-grid img:hover { transform: scale(1.02); }
+        .lb-close:hover{ background: rgba(255,80,80,.35); }
+        .lb-counter{
+            position: absolute;
+            bottom: 22px; left: 50%;
+            transform: translateX(-50%);
+            font-size: .82rem;
+            color: rgba(255,255,255,.6);
+            background: rgba(0,0,0,.3);
+            padding: 5px 16px;
+            border-radius: 999px;
+            backdrop-filter: blur(10px);
+            letter-spacing: 1px;
+        }
+
+        /* ── ALBUM NAV FOOTER ──────────────────────────────────── */
+        .album-footer-nav{
+            position: relative; z-index:1;
+            max-width: 1280px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .album-nav-btn{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border-radius: 999px;
+            border: 1px solid var(--stroke);
+            background: rgba(128,128,140,.12);
+            color: var(--text-muted);
+            font-size: .88rem;
+            transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+        }
+        .album-nav-btn:hover{
+            background: rgba(var(--accent-rgb),.12);
+            color: var(--accent);
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+        .album-nav-btn.prev:hover{ transform: translateX(-3px); }
+        .album-nav-btn.next:hover{ transform: translateX(3px); }
+
+        /* ── WA CTA ────────────────────────────────────────────── */
+        .album-cta-strip{
+            position: relative; z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto 48px;
+            padding: 0 20px;
+        }
+        .album-cta-card{
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .album-cta-card h3{
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+        .album-cta-card p{
+            font-size: .88rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .album-cta-btn{
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 500;
+            font-size: .92rem;
+            box-shadow: 0 8px 28px var(--accent-glow);
+            transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+            white-space: nowrap;
+        }
+        .album-cta-btn:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 14px 40px var(--accent-glow);
+            opacity: .92;
+        }
     </style>
 </head>
-<body>
 
-    <div class="header-album">
-        <a href="index.html" class="btn-back">← Retour</a>
-        <h1>Album Couple</h1>
+<body class="dark-mode">
+
+    <!-- BACKGROUND -->
+    <div class="ambient-bg">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="glow glow-3"></div>
     </div>
 
-    <div class="album-grid">
-        <img src="https://i.postimg.cc/qv7wrrcz/IMG_1686.jpg">
-        <img src="https://i.postimg.cc/Bnvp335L/IMG_1687.jpg">
-        <img src="https://i.postimg.cc/sg2mzzP1/IMG_1688.jpg">
-        <img src="https://i.postimg.cc/MpG5ww0Z/IMG_1689.jpg">
-        <img src="https://i.postimg.cc/nhL2xxKc/IMG_1690.jpg">
+    <!-- ── HEADER (même que site principal) ────────────────────── -->
+    <header class="site-header glass" id="site-header">
+        <div class="header-inner">
+            <div class="header-left">
+                <a href="adjei.html" class="icon-btn" aria-label="Retour accueil" style="text-decoration:none">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+                </a>
+            </div>
+            <div class="logo">
+                <a href="adjei.html"><em>STUDIO</em><strong>ADJEI</strong></a>
+            </div>
+            <div class="header-right">
+                <a href="https://wa.me/2250705292570" target="_blank" class="icon-btn" aria-label="WhatsApp" style="text-decoration:none">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── ALBUM HERO ───────────────────────────────────────────── -->
+    <div class="album-hero">
+        <div>
+            <span class="album-category">Portfolio · Couple</span>
+            <h1 class="album-title"><em>Couple</em></h1>
+            <p class="album-count" id="photo-count">5 photos</p>
+        </div>
+        <a href="adjei.html" class="album-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+            Retour à la galerie
+        </a>
     </div>
 
+    <!-- ── PHOTO GRID ───────────────────────────────────────────── -->
+    <div class="album-grid" id="album-grid">
+        <div class="album-item" data-index="01" data-src="https://i.postimg.cc/qv7wrrcz/IMG_1686.jpg">
+            <img src="https://i.postimg.cc/qv7wrrcz/IMG_1686.jpg" alt="Couple 1" loading="lazy"/>
+        </div>
+        <div class="album-item" data-index="02" data-src="https://i.postimg.cc/Bnvp335L/IMG_1687.jpg">
+            <img src="https://i.postimg.cc/Bnvp335L/IMG_1687.jpg" alt="Couple 2" loading="lazy"/>
+        </div>
+        <div class="album-item" data-index="03" data-src="https://i.postimg.cc/sg2mzzP1/IMG_1688.jpg">
+            <img src="https://i.postimg.cc/sg2mzzP1/IMG_1688.jpg" alt="Couple 3" loading="lazy"/>
+        </div>
+        <div class="album-item" data-index="04" data-src="https://i.postimg.cc/MpG5ww0Z/IMG_1689.jpg">
+            <img src="https://i.postimg.cc/MpG5ww0Z/IMG_1689.jpg" alt="Couple 4" loading="lazy"/>
+        </div>
+        <div class="album-item" data-index="05" data-src="https://i.postimg.cc/nhL2xxKc/IMG_1690.jpg">
+            <img src="https://i.postimg.cc/nhL2xxKc/IMG_1690.jpg" alt="Couple 5" loading="lazy"/>
+        </div>
+    </div>
+
+    <!-- ── CTA STRIP ────────────────────────────────────────────── -->
+    <div class="album-cta-strip">
+        <div class="glass album-cta-card">
+            <div>
+                <h3>Vous avez un projet similaire ?</h3>
+                <p>Réservez votre séance couple · Studio à Yopougon, Abidjan</p>
+            </div>
+            <a href="https://wa.me/2250705292570" class="album-cta-btn" target="_blank">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Réserver via WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <!-- ── ALBUM NAV ─────────────────────────────────────────────── -->
+    <div class="album-footer-nav">
+        <a href="adjei.html" class="album-nav-btn prev">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Galerie principale
+        </a>
+        <a href="portrait.html" class="album-nav-btn next">
+            Album Portrait
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+    </div>
+
+    <!-- ── FLOATING WA ───────────────────────────────────────────── -->
+    <a class="floating-wa glass" href="https://wa.me/2250705292570" target="_blank" aria-label="WhatsApp">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="wa-label">WhatsApp</span>
+    </a>
+
+    <!-- ── LIGHTBOX ──────────────────────────────────────────────── -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse de photos">
+        <button class="lb-close" id="lb-close" aria-label="Fermer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button class="lb-btn lb-prev" id="lb-prev" aria-label="Photo précédente">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <img class="lightbox-img" id="lb-img" src="" alt=""/>
+        <button class="lb-btn lb-next" id="lb-next" aria-label="Photo suivante">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="lb-counter" id="lb-counter">1 / 5</div>
+    </div>
+
+    <script>
+    /* ── THEME SYNC (lit les préférences du site principal) ─────── */
+    (function syncTheme() {
+        const body      = document.body;
+        const savedMode = localStorage.getItem('sa-theme');
+        const savedColor= localStorage.getItem('sa-color');
+
+        // Dark / light
+        const isDark = savedMode !== null ? savedMode === 'dark' : true;
+        body.classList.toggle('dark-mode', isDark);
+
+        // Couleur accent
+        if (savedColor) {
+            document.documentElement.setAttribute('data-color', savedColor);
+        }
+    })();
+
+    /* ── LIGHTBOX ───────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+        const items    = Array.from(document.querySelectorAll('.album-item'));
+        const lb       = document.getElementById('lightbox');
+        const lbImg    = document.getElementById('lb-img');
+        const lbCounter= document.getElementById('lb-counter');
+        const lbClose  = document.getElementById('lb-close');
+        const lbPrev   = document.getElementById('lb-prev');
+        const lbNext   = document.getElementById('lb-next');
+        let current    = 0;
+
+        // update count display
+        const countEl = document.getElementById('photo-count');
+        if (countEl) countEl.textContent = items.length + ' photo' + (items.length > 1 ? 's' : '');
+
+        function open(i) {
+            current = i;
+            lbImg.src = items[i].dataset.src;
+            lbCounter.textContent = (i + 1) + ' / ' + items.length;
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function close() {
+            lb.classList.remove('open');
+            document.body.style.overflow = '';
+            setTimeout(() => { lbImg.src = ''; }, 300);
+        }
+        function prev() { open((current - 1 + items.length) % items.length); }
+        function next() { open((current + 1) % items.length); }
+
+        items.forEach((item, i) => item.addEventListener('click', () => open(i)));
+        lbClose.addEventListener('click', close);
+        lbPrev.addEventListener('click', prev);
+        lbNext.addEventListener('click', next);
+        lb.addEventListener('click', e => { if (e.target === lb) close(); });
+
+        // Keyboard
+        document.addEventListener('keydown', e => {
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape')      close();
+            if (e.key === 'ArrowLeft')   prev();
+            if (e.key === 'ArrowRight')  next();
+        });
+
+        // Swipe
+        let touchStartX = 0;
+        lb.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        lb.addEventListener('touchend',   e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(dx) > 50) dx < 0 ? next() : prev();
+        }, { passive: true });
+    });
+    </script>
 </body>
 </html>
